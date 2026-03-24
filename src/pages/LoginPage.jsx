@@ -1,12 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 //import { signup } from "../utils/SignUp";
 import { login } from "../utils/Login";
 import  SignUpModal from "../components/SignUpModal";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSignupOpen, setIsSignupOpen] = useState(false);
+  const navigate = useNavigate();
+
+ 
+
+  function abc() 
+  {
+    const idToken= localStorage.getItem('idtoken')
+    if(idToken){
+      navigate('/discover')
+    }
+    
+  }
   return (
     <div className="min-h-screen bg-[#141414] font-sans p-6 flex flex-col items-center justify-center gap-8">
       <SignUpModal
@@ -45,7 +58,9 @@ export default function LoginPage() {
 
           {/* Login Button */}
           <button
-            onClick={() => login(email, password)}
+            onClick={() => {login(email, password)
+              abc()
+            }}
             className="w-full bg-pink-500 text-white text-sm font-medium py-2.5 rounded-xl hover:bg-pink-600 transition-colors mb-4"
           >
             Log In

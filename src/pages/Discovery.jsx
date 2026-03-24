@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Chips } from "../components/Chips";
 import { Cards } from "../components/Cards";
 import { logout } from "../utils/Logout";
+import { useNavigate } from "react-router-dom";  // ← add this
+import {Header} from "../components/Header";
+
 const FILTERS = ["All", "Street", "Casual", "Formal"];
 
 const OUTFITS = [
@@ -16,9 +19,13 @@ const OUTFITS = [
 export default function DiscoverScreen() {
   const [activeFilter, setActiveFilter] = useState("Street");
   const [query, setQuery] = useState("");
+  const navigate = useNavigate();  // ← add this
 
   return (
+    
+   
     <div className="min-h-screen bg-[#141414] font-sans p-6">
+     <Header/>
       <div className="flex gap-3 items-center mb-6">
         <input
           type="text"
@@ -35,10 +42,13 @@ export default function DiscoverScreen() {
               active={activeFilter === f}
               onClick={() => setActiveFilter(f)}
             />
-
           ))}
-            <button onClick={()=>logout()}className="ml-2 px-2 py-1.5 rounded-full text-sm font-medium transition-all duration-200 bg-transparent text-gray-300 border border-gray-600 hover:border-rose-400 hover:text-rose-400">
-             Logout </button>
+          <button
+            onClick={() => logout(navigate)}  // ← pass navigate here
+            className="ml-2 px-2 py-1.5 rounded-full text-sm font-medium transition-all duration-200 bg-transparent text-gray-300 border border-gray-600 hover:border-rose-400 hover:text-rose-400"
+          >
+            Logout
+          </button>
         </div>
       </div>
 
@@ -54,5 +64,6 @@ export default function DiscoverScreen() {
         ))}
       </div>
     </div>
+    
   );
 }
