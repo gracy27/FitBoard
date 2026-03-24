@@ -8,24 +8,20 @@ import { fetchPhotos } from "../api/unsplash";
 
 const FILTERS = ["All", "Street", "Casual", "Formal"];
 
-const OUTFITS = [
-  { id: 1, title: "Street look",  tags: ["Casual", "Urban"],    bgColor: "#f9c6d0", saved: true  },
-  { id: 2, title: "Boho dress",   tags: ["Feminine", "Summer"], bgColor: "#c6f0e0", saved: false },
-  { id: 3, title: "Office fit",   tags: ["Smart", "Minimal"],   bgColor: "#dcd6f7", saved: false },
-  { id: 4, title: "Y2K vibes",    tags: ["Retro", "Bold"],      bgColor: "#fce8cc", saved: false },
-  { id: 5, title: "Monochrome",   tags: ["Minimal", "Clean"],   bgColor: "#fcd5d5", saved: true  },
-  { id: 6, title: "Cottagecore",  tags: ["Soft", "Nature"],     bgColor: "#d4f0d4", saved: false },
-];
 
 
 
 export default function DiscoverScreen() {
   const [activeFilter, setActiveFilter] = useState("Street");
   const [query, setQuery] = useState("");
+  const [photos, setPhotos] = useState([]);
   const navigate = useNavigate();  
   useEffect(()=>
    {
-    fetchPhotos('fashion').then(data => console.log(data)).catch(err => console.error(err));
+    fetchPhotos('fashion').then(data => {
+      console.log(data);
+      setPhotos(data.results);
+    }).catch(err => console.error(err));
    },[])
   return (
     
@@ -59,13 +55,13 @@ export default function DiscoverScreen() {
       </div>
 
       <div className="grid grid-cols-3 gap-4">
-        {OUTFITS.map((outfit) => (
+        {photos.map((photo) => (
           <Cards
-            key={outfit.id}
-            title={outfit.title}
-            tags={outfit.tags}
-            bgColor={outfit.bgColor}
-            saved={outfit.saved}
+            key={photo.id}
+            id={photo.id}
+            url={photo.urls.small}
+            title={photo.alt_description}
+            saved={false}
           />
         ))}
       </div>
