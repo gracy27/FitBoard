@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Chips } from "../components/Chips";
 import { Cards } from "../components/Cards";
 import { logout } from "../utils/Logout";
-import { useNavigate } from "react-router-dom";  // ← add this
+import { useNavigate } from "react-router-dom"; 
 import {Header} from "../components/Header";
+import { fetchPhotos } from "../api/unsplash";
 
 const FILTERS = ["All", "Street", "Casual", "Formal"];
 
@@ -16,11 +17,16 @@ const OUTFITS = [
   { id: 6, title: "Cottagecore",  tags: ["Soft", "Nature"],     bgColor: "#d4f0d4", saved: false },
 ];
 
+
+
 export default function DiscoverScreen() {
   const [activeFilter, setActiveFilter] = useState("Street");
   const [query, setQuery] = useState("");
-  const navigate = useNavigate();  // ← add this
-
+  const navigate = useNavigate();  
+  useEffect(()=>
+   {
+    fetchPhotos('fashion').then(data => console.log(data)).catch(err => console.error(err));
+   },[])
   return (
     
    
