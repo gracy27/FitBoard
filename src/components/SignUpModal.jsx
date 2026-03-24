@@ -64,7 +64,25 @@ export default function SignUpModal({ isOpen, onClose }) {
         />
 
         <button
-          onClick={() => signup(email, password)}
+          onClick={async () => {
+            if (!name || !email || !password || !confirmPassword) {
+              alert("Please fill out all fields.");
+              return;
+            }
+
+            if (password !== confirmPassword) {
+              alert("Passwords do not match.");
+              return;
+            }
+
+            try {
+              await signup(email, password);
+              onClose();
+            } catch (error) {
+              console.error(error);
+              alert("Failed to sign up. Please try again.");
+            }
+          }}
           className="w-full bg-pink-500 text-white text-sm font-medium py-2.5 rounded-xl hover:bg-pink-600 transition-colors mb-3"
         >
           Create Account
