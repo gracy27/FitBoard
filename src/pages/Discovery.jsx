@@ -55,7 +55,7 @@ export default function DiscoverScreen() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#141414] font-sans p-6">
+    <div className="min-h-screen bg-[#141414] font-sans ">
       <Header />
       <div className="flex gap-3 items-center mb-6">
         <input

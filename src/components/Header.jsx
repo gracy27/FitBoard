@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 export function Header()
 {
     const [userEmail, setUserEmail] = useState(localStorage.getItem('userEmail'));
@@ -14,14 +14,14 @@ export function Header()
 
     const initialName = userEmail && userEmail.length > 0 ? userEmail.charAt(0).toUpperCase() : '';
    
-    
+    const navigate = useNavigate();
     return(
     <>
     <div className="bg-black flex justify-between">
         <div className="text-pink-500">FitBoard</div>
         <div className="flex  gap-[2rem]">
-            <span className="text-white">Discover</span>
-            <span className="text-white" >Wardrobe</span>
+            <span className="text-white cursor-pointer" onClick={() => navigate('/discover')}>Discover</span>
+            <span className="text-white cursor-pointer" onClick={() => navigate('/wardrobe')}>Wardrobe</span>
             <span className="text-white">Moodboards</span>
         </div>
         <div>
