@@ -1,13 +1,13 @@
-import { useState,useEffect,useRef} from "react";
+import { useState, useEffect, useRef } from "react";
 import { Chips } from "../components/Chips";
 import { Cards } from "../components/Cards";
 import { logout } from "../utils/Logout";
-import { useNavigate } from "react-router-dom"; 
-import {Header} from "../components/Header";
+import { useNavigate } from "react-router-dom";
+import { Header } from "../components/Header";
 import { fetchPhotos } from "../api/unsplash";
+import { PhotoModal } from "../components/PhotoModal";  
 
 const FILTERS = ["All", "Street", "Casual", "Formal"];
-
 
 export default function DiscoverScreen() {
   const [activeFilter, setActiveFilter] = useState("Street");
@@ -16,6 +16,7 @@ export default function DiscoverScreen() {
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedPhoto, setSelectedPhoto] = useState(null);   
   const navigate = useNavigate();
   const isLoadingRef = useRef(false);
   const hasMoreRef = useRef(true);
@@ -42,7 +43,6 @@ export default function DiscoverScreen() {
     fetchData();
   }, [page]);
 
-
   useEffect(() => {
     const handleScroll = () => {
       if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 && !isLoadingRef.current && hasMoreRef.current) {
@@ -55,10 +55,8 @@ export default function DiscoverScreen() {
   }, []);
 
   return (
-    
-   
     <div className="min-h-screen bg-[#141414] font-sans p-6">
-     <Header/>
+      <Header />
       <div className="flex gap-3 items-center mb-6">
         <input
           type="text"
@@ -77,7 +75,7 @@ export default function DiscoverScreen() {
             />
           ))}
           <button
-            onClick={() => logout(navigate)}  // ← pass navigate here
+            onClick={() => logout(navigate)}
             className="ml-2 px-2 py-1.5 rounded-full text-sm font-medium transition-all duration-200 bg-transparent text-gray-300 border border-gray-600 hover:border-rose-400 hover:text-rose-400"
           >
             Logout
@@ -93,10 +91,17 @@ export default function DiscoverScreen() {
             url={photo.urls.small}
             title={photo.alt_description}
             saved={false}
+            onClick={() => setSelectedPhoto(photo)}   
           />
         ))}
       </div>
+
+      
+      <PhotoModal
+        photo={selectedPhoto}
+        onClose={() => setSelectedPhoto(null)}
+      />                                              
+
     </div>
-    
   );
 }
