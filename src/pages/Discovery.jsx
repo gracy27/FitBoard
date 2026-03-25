@@ -1,4 +1,4 @@
-import { useState,useEffect,useCallback} from "react";
+import { useState,useEffect,useRef} from "react";
 import { Chips } from "../components/Chips";
 import { Cards } from "../components/Cards";
 import { logout } from "../utils/Logout";
@@ -17,37 +17,42 @@ export default function DiscoverScreen() {
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
-  const loadPhotos = useCallback(async () => {
-    if (!hasMore || isLoading) return;
-    setIsLoading(true);
-
-    try {
-      const data = await fetchPhotos('fashion', page);
-      setPhotos((prev) => [...prev, ...data.results]);
-      setHasMore(page < 1000);
-      setPage((prev) => prev + 1);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [hasMore, isLoading, page]);
+  const isLoadingRef = useRef(false);
+  const hasMoreRef = useRef(true);
 
   useEffect(() => {
-    loadPhotos();
-  }, [loadPhotos]);
+    if (isLoadingRef.current || !hasMoreRef.current) return;
+
+    const fetchData = async () => {
+      isLoadingRef.current = true;
+      setIsLoading(true);
+      try {
+        const data = await fetchPhotos('fashion', page);
+        setPhotos((prev) => [...prev, ...data.results]);
+        hasMoreRef.current = page < 1000;
+        setHasMore(page < 1000);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        isLoadingRef.current = false;
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [page]);
+
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
-        loadPhotos();
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 && !isLoadingRef.current && hasMoreRef.current) {
+        setPage((prev) => prev + 1);
       }
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-   }, [loadPhotos]);
+  }, []);
 
   return (
     

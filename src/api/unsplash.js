@@ -9,13 +9,13 @@ const unsplashApi = axios.create({
 
 export default unsplashApi;
 
-export const fetchPhotos= async (query='fashion', pageNum=1) => {
+export const fetchPhotos= async (query='fashion', page) => {
     console.log(import.meta.env.VITE_UNSPLASH_ACCESS_KEY)
   try {
     const response = await unsplashApi.get("/search/photos", {
       params: {
         query,
-        page: pageNum,
+        page,
        
       },
       
