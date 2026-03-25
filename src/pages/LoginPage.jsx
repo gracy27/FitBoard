@@ -12,13 +12,12 @@ export default function LoginPage() {
 
  
 
-  function abc() 
-  {
-    const idToken= localStorage.getItem('idtoken')
-    if(idToken){
-      navigate('/discover')
+  async function handleLogin() {
+    await login(email, password);
+    const idToken = localStorage.getItem('idtoken');
+    if (idToken) {
+      navigate('/discover');
     }
-    
   }
   return (
     <div className="min-h-screen bg-[#141414] font-sans p-6 flex flex-col items-center justify-center gap-8">
@@ -58,9 +57,7 @@ export default function LoginPage() {
 
           {/* Login Button */}
           <button
-            onClick={() => {login(email, password)
-              abc()
-            }}
+            onClick={handleLogin}
             className="w-full bg-pink-500 text-white text-sm font-medium py-2.5 rounded-xl hover:bg-pink-600 transition-colors mb-4"
           >
             Log In

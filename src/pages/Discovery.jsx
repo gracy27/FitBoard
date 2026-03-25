@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Chips } from "../components/Chips";
 import { Cards } from "../components/Cards";
-import { logout } from "../utils/Logout";
-import { useNavigate } from "react-router-dom";
 import { Header } from "../components/Header";
 import { fetchPhotos } from "../api/unsplash";
 import { PhotoModal } from "../components/PhotoModal";  
@@ -16,8 +14,7 @@ export default function DiscoverScreen() {
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedPhoto, setSelectedPhoto] = useState(null);   
-  const navigate = useNavigate();
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
   const isLoadingRef = useRef(false);
   const hasMoreRef = useRef(true);
 
@@ -74,12 +71,6 @@ export default function DiscoverScreen() {
               onClick={() => setActiveFilter(f)}
             />
           ))}
-          <button
-            onClick={() => logout(navigate)}
-            className="ml-2 px-2 py-1.5 rounded-full text-sm font-medium transition-all duration-200 bg-transparent text-gray-300 border border-gray-600 hover:border-rose-400 hover:text-rose-400"
-          >
-            Logout
-          </button>
         </div>
       </div>
 
