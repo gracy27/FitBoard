@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react";
+import { useState,useEffect,useCallback} from "react";
 import { Chips } from "../components/Chips";
 import { Cards } from "../components/Cards";
 import { logout } from "../utils/Logout";
@@ -9,20 +9,46 @@ import { fetchPhotos } from "../api/unsplash";
 const FILTERS = ["All", "Street", "Casual", "Formal"];
 
 
-
-
 export default function DiscoverScreen() {
   const [activeFilter, setActiveFilter] = useState("Street");
   const [query, setQuery] = useState("");
   const [photos, setPhotos] = useState([]);
-  const navigate = useNavigate();  
-  useEffect(()=>
-   {
-    fetchPhotos('fashion').then(data => {
-      console.log(data);
-      setPhotos(data.results);
-    }).catch(err => console.error(err));
-   },[])
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const loadPhotos = useCallback(async () => {
+    if (!hasMore || isLoading) return;
+    setIsLoading(true);
+
+    try {
+      const data = await fetchPhotos('fashion', page);
+      setPhotos((prev) => [...prev, ...data.results]);
+      setHasMore(page < 1000);
+      setPage((prev) => prev + 1);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [hasMore, isLoading, page]);
+
+  useEffect(() => {
+    loadPhotos();
+  }, [loadPhotos]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
+        loadPhotos();
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+   }, [loadPhotos]);
+
   return (
     
    
