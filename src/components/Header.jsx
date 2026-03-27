@@ -1,23 +1,26 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { logout } from '../utils/Logout';
 import { useNavigate } from 'react-router-dom';
 export function Header() {
     const [userEmail, setUserEmail] = useState(localStorage.getItem('userEmail'));
+    const[userName, setUserName] = useState(localStorage.getItem('userName'));
     const navigate = useNavigate();
 
     useEffect(() => {
+       
         const handleStorageChange = () => {
             const email = localStorage.getItem('userEmail');
             setUserEmail(email);
+            const name = localStorage.getItem('userName');
+            setUserName(name);
         };
         
         window.addEventListener('storage', handleStorageChange);
         return () => window.removeEventListener('storage', handleStorageChange);
     }, []);
-
-    const initialName = userEmail && userEmail.length > 0 ? userEmail.charAt(0).toUpperCase() : '';
-   
+                        
+    const initialName = userName  &&  userName!=='null' ? userName.charAt(0).toUpperCase() : userEmail.charAt(0).toUpperCase() ;
+    // something ? value : value1
     return (
         <header className="bg-[#0a0a0a] border-b border-gray-800 py-4 px-6 mb-6">
             <div className="flex justify-between items-center">
@@ -28,13 +31,13 @@ export function Header() {
                 </div>
 
                 <nav className="flex gap-8 items-center">
-                    <span className="text-gray-300 text-sm hover:text-rose-400 transition-colors cursor-pointer font-medium">
+                    <span onClick={() => navigate('/discover')} className="text-gray-300 text-sm hover:text-rose-400 transition-colors cursor-pointer font-medium">
                         Discover
                     </span>
-                    <span className="text-gray-300 text-sm hover:text-rose-400 transition-colors cursor-pointer font-medium">
+                    <span onClick={() => navigate('/wardrobe')} className="text-gray-300 text-sm hover:text-rose-400 transition-colors cursor-pointer font-medium">
                         Wardrobe
                     </span>
-                    <span className="text-gray-300 text-sm hover:text-rose-400 transition-colors cursor-pointer font-medium">
+                    <span  className="text-gray-300 text-sm hover:text-rose-400 transition-colors cursor-pointer font-medium">
                         Moodboards
                     </span>
                 </nav>

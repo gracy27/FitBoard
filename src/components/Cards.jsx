@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 export function Cards({ id, url, title, tags = [], bgColor = "#f3c6d0", saved: initialSaved = false, onClick }) {
-//                                                                                                    ↑ added
+
   const [saved, setSaved] = useState(initialSaved);
 
   return (

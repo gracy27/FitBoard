@@ -76,7 +76,7 @@ export default function SignUpModal({ isOpen, onClose }) {
             }
 
             try {
-              await signup(email, password);
+              await signup(email, password, name);
               onClose();
             } catch (error) {
               console.error(error);

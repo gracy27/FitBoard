@@ -8,11 +8,14 @@ export const login = async (email, password) => {
       email,
       password
     );
+   
     console.log("Logged in:", userCredential.user);
     const idToken= userCredential.user.accessToken;
     localStorage.setItem("idtoken", idToken)
     const userEmail= userCredential.user.email;
-     localStorage.setItem("userEmail", userEmail)
+    localStorage.setItem("userEmail", userEmail)
+    const userName= userCredential.user.displayName;
+    localStorage.setItem("userName", userName)
   } catch (error) {
     console.error(error.message);
   }
