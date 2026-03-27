@@ -2,22 +2,11 @@ import { useState, useEffect } from 'react';
 import { logout } from '../utils/Logout';
 import { useNavigate } from 'react-router-dom';
 export function Header() {
-    const [userEmail, setUserEmail] = useState(localStorage.getItem('userEmail'));
-    const[userName, setUserName] = useState(localStorage.getItem('userName'));
+    const userEmail=localStorage.getItem('userEmail');
+    const userName=localStorage.getItem('userName');
     const navigate = useNavigate();
 
-    useEffect(() => {
-       
-        const handleStorageChange = () => {
-            const email = localStorage.getItem('userEmail');
-            setUserEmail(email);
-            const name = localStorage.getItem('userName');
-            setUserName(name);
-        };
-        
-        window.addEventListener('storage', handleStorageChange);
-        return () => window.removeEventListener('storage', handleStorageChange);
-    }, []);
+    
                         
     const initialName = userName  &&  userName!=='null' ? userName.charAt(0).toUpperCase() : userEmail.charAt(0).toUpperCase() ;
     // something ? value : value1
