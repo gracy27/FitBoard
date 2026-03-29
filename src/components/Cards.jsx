@@ -1,9 +1,20 @@
 import { useState } from "react";
 
-export function Cards({ id, url, title, tags = [], bgColor = "#f3c6d0", saved: initialSaved = false, onClick }) {
-
+export function Cards({ id, url, title, tags = [], bgColor = "#f3c6d0", saved: initialSaved = false, onClick, onPhotoSaved }) {
+//                                                                                                    ↑ added
   const [saved, setSaved] = useState(initialSaved);
+  const handleSaved = (e) => {
+    {
+      e.stopPropagation();
+      setSaved(!saved);
+      if(onPhotoSaved){
+        onPhotoSaved(id, !saved);
+        console.log('id is',id);
+      }
 
+
+    }
+  };
   return (
     <div
       className="bg-[#1e1e1e] rounded-2xl overflow-hidden flex flex-col cursor-pointer hover:scale-[1.02] transition-transform duration-200"
@@ -24,10 +35,7 @@ export function Cards({ id, url, title, tags = [], bgColor = "#f3c6d0", saved: i
         </div>
 
         <button
-          onClick={(e) => {
-            e.stopPropagation();       // ← added (prevents modal from opening on save click)
-            setSaved((s) => !s);
-          }}
+          onClick={handleSaved}
           className={`
             flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium w-fit transition-all duration-200
             ${

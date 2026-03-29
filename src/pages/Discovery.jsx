@@ -7,7 +7,8 @@ import { PhotoModal } from "../components/PhotoModal";
 
 const FILTERS = ["All", "Street", "Casual", "Formal"];
 
-export default function DiscoverScreen() {
+export default function DiscoverScreen({ savedPhotos, setSavedPhotos }) {  // ← receive props
+  // const [savedPhotos, setSavedPhotos] = useState([]);  // ← remove this
   const [activeFilter, setActiveFilter] = useState("Street");
   const [query, setQuery] = useState("");
   const [photos, setPhotos] = useState([]);
@@ -17,7 +18,7 @@ export default function DiscoverScreen() {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const isLoadingRef = useRef(false);
   const hasMoreRef = useRef(true);
-
+  
   useEffect(() => {
     if (isLoadingRef.current || !hasMoreRef.current) return;
 
@@ -51,6 +52,10 @@ export default function DiscoverScreen() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    console.log("saved photos in discover", savedPhotos);
+  }, [savedPhotos])
+
   return (
     <div className="min-h-screen bg-[#141414] font-sans ">
       <Header />
@@ -81,18 +86,23 @@ export default function DiscoverScreen() {
             id={photo.id}
             url={photo.urls.small}
             title={photo.alt_description}
-            saved={false}
+            saved={savedPhotos.some(p => p.id === photo.id)}
             onClick={() => setSelectedPhoto(photo)}   
+            onPhotoSaved={(id, isSaved) => {
+              if (isSaved) {
+                setSavedPhotos([...savedPhotos, photo])
+              } else {
+                setSavedPhotos((prev) => prev.filter((p) => p.id !== id))
+              }
+            }}
           />
         ))}
       </div>
 
-      
       <PhotoModal
         photo={selectedPhoto}
         onClose={() => setSelectedPhoto(null)}
       />                                              
-
     </div>
   );
 }
