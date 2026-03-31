@@ -15,7 +15,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/discover" element={<Discovery savedPhotos={savedPhotos} setSavedPhotos={setSavedPhotos} />} />
-          <Route path="/wardrobe" element={<Wardrobe savedPhotos={savedPhotos} />} />
+          <Route path="/wardrobe" element={<Wardrobe savedPhotos={savedPhotos} setSavedPhotos={setSavedPhotos} />} />
         </Routes>
       </BrowserRouter>
     </Provider>

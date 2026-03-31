@@ -1,7 +1,7 @@
 import { Header } from "../components/Header"
 import { Cards } from "../components/Cards"
 
-export default function Wardrobe({ savedPhotos }) {
+export default function Wardrobe({ savedPhotos, setSavedPhotos }) {
   return (
     <div className="min-h-screen bg-[#141414] font-sans">
       <Header />
@@ -26,6 +26,11 @@ export default function Wardrobe({ savedPhotos }) {
               url={photo.urls.small}
               title={photo.alt_description}
               saved={true}
+               onPhotoSaved={(id, isSaved) => {
+              if (!isSaved) {
+               setSavedPhotos((prev) => prev.filter((p) => p.id !== id))
+              }
+            }}
             />
           ))}
         </div>
