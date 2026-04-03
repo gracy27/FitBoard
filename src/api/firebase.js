@@ -31,7 +31,7 @@ export const db = getFirestore(app);
 export const savePhotoToFirebase = async (userId, photo) => {
   
   try {
-    const docRef = await addDoc(collection(db, "users", userId, "savedPhotos"), {
+    const docRef = await addDoc(collection(db, "users", userId, "likedPhotos"), {
       id: photo.id,
       urls: photo.urls,
       alt_description: photo.alt_description,
@@ -47,7 +47,7 @@ export const savePhotoToFirebase = async (userId, photo) => {
 // 2. DELETE a photo from Firebase
 export const deletePhotoFromFirebase = async (userId, photoDocId) => {
   try {
-    await deleteDoc(doc(db, "users", userId, "savedPhotos", photoDocId));
+    await deleteDoc(doc(db, "users", userId, "likedPhotos", photoDocId));
   } catch (error) {
     console.error("Error deleting photo:", error);
     throw error;
@@ -55,10 +55,10 @@ export const deletePhotoFromFirebase = async (userId, photoDocId) => {
 };
 
 // 3. FETCH all saved photos from Firebase
-export const fetchSavedPhotosFromFirebase = async (userId) => {
+export const fetchlikedPhotosFromFirebase = async (userId) => {
 
   try {
-    const q = query(collection(db, "users", userId, "savedPhotos"));
+    const q = query(collection(db, "users", userId, "likedPhotos"));
     const querySnapshot = await getDocs(q);
     const photos = [];
     querySnapshot.forEach((doc) => {

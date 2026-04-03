@@ -1,10 +1,10 @@
 import { Header } from "../components/Header"
 import { Cards } from "../components/Cards"
 import { useState, useEffect } from "react";
-import { fetchSavedPhotosFromFirebase } from "../api/firebase";
+import { fetchlikedPhotosFromFirebase } from "../api/firebase";
 
-export default function Wardrobe({ savedPhotos, setSavedPhotos }) {
-  const [likedPhotos, setlikedPhotos] = useState([]);
+export default function Wardrobe({ likedPhotos, setlikedPhotos }) {
+  // const [likedPhotos, setlikedPhotos] = useState([]);
   const uid = localStorage.getItem("uid");
 
   const handlePhotoDelete = (photoId) => {
@@ -14,7 +14,7 @@ export default function Wardrobe({ savedPhotos, setSavedPhotos }) {
 
   useEffect(() => {
     console.log("Fetching photos for user:", uid);
-    fetchSavedPhotosFromFirebase(uid).then((photos) => {
+    fetchlikedPhotosFromFirebase(uid).then((photos) => {
       setlikedPhotos(photos);
       console.log("Photos fetched from Firebase:", photos);
     })

@@ -7,7 +7,7 @@ import { PhotoModal } from "../components/PhotoModal";
 import { savePhotoToFirebase } from "../api/firebase";
 const FILTERS = ["All", "Street", "Casual", "Formal"];
 
-export default function DiscoverScreen({ savedPhotos, setSavedPhotos }) {
+export default function DiscoverScreen({ likedPhotos, setlikedPhotos }) {
   const [activeFilter, setActiveFilter] = useState("Street");
   const [query, setQuery] = useState("");
   const [photos, setPhotos] = useState([]);
@@ -24,11 +24,11 @@ export default function DiscoverScreen({ savedPhotos, setSavedPhotos }) {
   const handlePhotoSaved = (photo, isSaved) => {
     if (isSaved) {
       // SAVE to localStorage
-      setSavedPhotos([...savedPhotos, photo]);
+      setlikedPhotos([...likedPhotos, photo]);
       console.log("Photo saved:", photo);
     } else {
       // DELETE from localStorage
-      setSavedPhotos(prev => prev.filter(p => p.id !== photo.id));
+      setlikedPhotos(prev => prev.filter(p => p.id !== photo.id));
       console.log("Photo deleted:", photo.id);
     }
   };
@@ -67,8 +67,8 @@ export default function DiscoverScreen({ savedPhotos, setSavedPhotos }) {
   }, []);
 
   useEffect(() => {
-    console.log("saved photos in discover", savedPhotos);
-  }, [savedPhotos])
+    console.log("saved photos in discover", likedPhotos);
+  }, [likedPhotos])
 
   return (
     <div className="min-h-screen bg-[#141414] font-sans ">
@@ -101,7 +101,7 @@ export default function DiscoverScreen({ savedPhotos, setSavedPhotos }) {
             url={photo.urls.small}
             title={photo.alt_description}
             photo={photo}
-            saved={savedPhotos.some(p => p.id === photo.id)}
+            saved={likedPhotos.some(p => p.id === photo.id)}
             onClick={() => setSelectedPhoto(photo)}   
             onPhotoSaved={() =>savePhotoToFirebase(uid, photo) }
           />

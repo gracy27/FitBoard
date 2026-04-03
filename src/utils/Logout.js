@@ -7,7 +7,7 @@ export const logout = async (navigate) => {
   localStorage.removeItem('idtoken');
   localStorage.removeItem('userEmail');
   localStorage.removeItem('userName');
-  localStorage.removeItem('savedPhotos');
+  localStorage.removeItem('likedPhotos');
   console.log("Logged out");
   navigate('/');
 };

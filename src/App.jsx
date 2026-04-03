@@ -7,14 +7,14 @@ import Discovery from './pages/Discovery'
 import Wardrobe from './pages/Wardrobe'
 
 export default function App() {
-  const [savedPhotos, setSavedPhotos] = useState([])
+  const [likedPhotos, setlikedPhotos] = useState([])
 
   // Load photos from localStorage on mount
   useEffect(() => {
-    const savedData = localStorage.getItem('savedPhotos')
+    const savedData = localStorage.getItem('likedPhotos')
     if (savedData) {
       try {
-        setSavedPhotos(JSON.parse(savedData))
+        setlikedPhotos(JSON.parse(savedData))
         console.log('Photos loaded from localStorage')
       } catch (error) {
         console.error('Error parsing saved photos:', error)
@@ -24,17 +24,17 @@ export default function App() {
 
   // Save photos to localStorage whenever they change
   useEffect(() => {
-    localStorage.setItem('savedPhotos', JSON.stringify(savedPhotos))
+    localStorage.setItem('likedPhotos', JSON.stringify(likedPhotos))
     console.log('Photos saved to localStorage')
-  }, [savedPhotos])
+  }, [likedPhotos])
 
   return (
     <Provider store={store}>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LoginPage />} />
-          <Route path="/discover" element={<Discovery savedPhotos={savedPhotos} setSavedPhotos={setSavedPhotos} />} />
-          <Route path="/wardrobe" element={<Wardrobe savedPhotos={savedPhotos} setSavedPhotos={setSavedPhotos} />} />
+          <Route path="/discover" element={<Discovery likedPhotos={likedPhotos} setlikedPhotos={setlikedPhotos} />} />
+          <Route path="/wardrobe" element={<Wardrobe likedPhotos={likedPhotos} setlikedPhotos={setlikedPhotos} />} />
         </Routes>
       </BrowserRouter>
     </Provider>
