@@ -4,11 +4,10 @@ import { Cards } from "../components/Cards";
 import { Header } from "../components/Header";
 import { fetchPhotos } from "../api/unsplash";
 import { PhotoModal } from "../components/PhotoModal";  
-
+import { savePhotoToFirebase } from "../api/firebase";
 const FILTERS = ["All", "Street", "Casual", "Formal"];
 
-export default function DiscoverScreen({ savedPhotos, setSavedPhotos }) {  // â† receive props
-  // const [savedPhotos, setSavedPhotos] = useState([]);  // â† remove this
+export default function DiscoverScreen({ savedPhotos, setSavedPhotos }) {
   const [activeFilter, setActiveFilter] = useState("Street");
   const [query, setQuery] = useState("");
   const [photos, setPhotos] = useState([]);
@@ -18,7 +17,22 @@ export default function DiscoverScreen({ savedPhotos, setSavedPhotos }) {  // â†
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const isLoadingRef = useRef(false);
   const hasMoreRef = useRef(true);
-  
+
+  // Get uid from localStorage
+  const uid = localStorage.getItem("uid");
+
+  const handlePhotoSaved = (photo, isSaved) => {
+    if (isSaved) {
+      // SAVE to localStorage
+      setSavedPhotos([...savedPhotos, photo]);
+      console.log("Photo saved:", photo);
+    } else {
+      // DELETE from localStorage
+      setSavedPhotos(prev => prev.filter(p => p.id !== photo.id));
+      console.log("Photo deleted:", photo.id);
+    }
+  };
+
   useEffect(() => {
     if (isLoadingRef.current || !hasMoreRef.current) return;
 
@@ -86,15 +100,10 @@ export default function DiscoverScreen({ savedPhotos, setSavedPhotos }) {  // â†
             id={photo.id}
             url={photo.urls.small}
             title={photo.alt_description}
+            photo={photo}
             saved={savedPhotos.some(p => p.id === photo.id)}
             onClick={() => setSelectedPhoto(photo)}   
-            onPhotoSaved={(id, isSaved) => {
-              if (isSaved) {
-                setSavedPhotos([...savedPhotos, photo])
-              } else {
-                setSavedPhotos((prev) => prev.filter((p) => p.id !== id))
-              }
-            }}
+            onPhotoSaved={() =>savePhotoToFirebase(uid, photo) }
           />
         ))}
       </div>

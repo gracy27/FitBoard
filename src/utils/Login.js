@@ -10,11 +10,13 @@ export const login = async (email, password) => {
     );
    
     console.log("Logged in:", userCredential.user);
-    const idToken= userCredential.user.accessToken;
+    const uid = userCredential.user.uid;
+    localStorage.setItem("uid", uid)
+    const idToken = userCredential.user.accessToken;
     localStorage.setItem("idtoken", idToken)
-    const userEmail= userCredential.user.email;
+    const userEmail = userCredential.user.email;
     localStorage.setItem("userEmail", userEmail)
-    const userName= userCredential.user.displayName;
+    const userName = userCredential.user.displayName;
     localStorage.setItem("userName", userName)
   } catch (error) {
     console.error(error.message);
