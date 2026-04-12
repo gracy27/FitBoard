@@ -1,18 +1,16 @@
 import { useState } from "react";
 
-export function Cards({ id, url, title, tags = [], bgColor = "#f3c6d0", saved: initialSaved = false, onClick, onPhotoSaved }) {
-//                                                                                                    ↑ added
+export function Cards({ id, url, title, saved: initialSaved = false, onClick, onPhotoSaved }) {
+                                                                                                  
   const [saved, setSaved] = useState(initialSaved);
   const handleSaved = (e) => {
     {
       e.stopPropagation();
       setSaved(!saved);
       if(onPhotoSaved){
-        onPhotoSaved(id, !saved);
+        onPhotoSaved(id, !saved); 
         console.log('id is',id);
       }
-
-
     }
   };
   return (
@@ -45,7 +43,6 @@ export function Cards({ id, url, title, tags = [], bgColor = "#f3c6d0", saved: i
             }
           `}
         >
-          <span>{saved ? "♥" : "♡"}</span>
           <span>{saved ? "Saved" : "Save"}</span>
         </button>
       </div>

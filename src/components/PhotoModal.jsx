@@ -19,8 +19,6 @@ export function PhotoModal({ photo, onClose }) {
         >
           ✕
         </button>
-
-      
         <img
           src={photo.urls.full}
           alt={photo.alt_description}

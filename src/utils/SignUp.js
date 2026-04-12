@@ -13,11 +13,11 @@ export const signup = async (email, password, displayName) => {
     console.log("User:", userCredential.user);
     
     const uid = userCredential.user.uid;
-    localStorage.setItem("uid", uid)
+
     const userEmail = userCredential.user.email;
-    localStorage.setItem("userEmail", userEmail)
+
     const userName = userCredential.user.displayName;
-    localStorage.setItem("userName", userName)
+
   } catch (error) {
     console.error(error.message);
   }

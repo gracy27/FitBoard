@@ -2,14 +2,21 @@ import { Header } from "../components/Header"
 import { Cards } from "../components/Cards"
 import { useState, useEffect } from "react";
 import { fetchlikedPhotosFromFirebase } from "../api/firebase";
-
+import { deletePhotoFromFirebase } from "../api/firebase";
 export default function Wardrobe({ likedPhotos, setlikedPhotos }) {
-  // const [likedPhotos, setlikedPhotos] = useState([]);
   const uid = localStorage.getItem("uid");
 
-  const handlePhotoDelete = (photoId) => {
+  const handlePhotoDelete = async (photoId) => {
+    if(!photoId) return;
+    try{
+    const deletedDocId = likedPhotos.find(p=>p.id===photoId)
+    await deletePhotoFromFirebase(uid, deletedDocId.docId);
     setlikedPhotos((prev) => prev.filter((p) => p.id !== photoId))
     console.log("Photo deleted:", photoId)
+    }
+    catch(err){
+      console.error("Error deleting photo:", err);
+    }
   }
 
   useEffect(() => {

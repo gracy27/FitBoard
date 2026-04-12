@@ -3,47 +3,55 @@ import { Chips } from "../components/Chips";
 import { Cards } from "../components/Cards";
 import { Header } from "../components/Header";
 import { fetchPhotos } from "../api/unsplash";
-import { PhotoModal } from "../components/PhotoModal";  
+import { PhotoModal } from "../components/PhotoModal";
 import { savePhotoToFirebase } from "../api/firebase";
-const FILTERS = ["All", "Street", "Casual", "Formal"];
+import { deletePhotoFromFirebase } from "../api/firebase";
+const FILTERS = ["All", "Men", "Women"];
 
 export default function DiscoverScreen({ likedPhotos, setlikedPhotos }) {
-  const [activeFilter, setActiveFilter] = useState("Street");
+  const [activeFilter, setActiveFilter] = useState("All");
   const [query, setQuery] = useState("");
   const [photos, setPhotos] = useState([]);
-  const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const isLoadingRef = useRef(false);
   const hasMoreRef = useRef(true);
 
-  // Get uid from localStorage
   const uid = localStorage.getItem("uid");
 
-  const handlePhotoSaved = (photo, isSaved) => {
+  const handlePhotoSaved = async(photoId, isSaved) => {
+    const photo = photos.find(p => p.id === photoId);
+    if(!photo) return;
+    try{
     if (isSaved) {
-      // SAVE to localStorage
-      setlikedPhotos([...likedPhotos, photo]);
-      console.log("Photo saved:", photo);
+      
+      const docId = await savePhotoToFirebase(uid, photo);
+      setlikedPhotos((prev)=>[...prev, { ...photo, docId }]);
+
+    
     } else {
-      // DELETE from localStorage
-      setlikedPhotos(prev => prev.filter(p => p.id !== photo.id));
-      console.log("Photo deleted:", photo.id);
+      const likedPhoto = likedPhotos.find(p => p.id === photoId);
+      console.log(likedPhotos)
+      await deletePhotoFromFirebase(uid, likedPhoto.docId);
+      setlikedPhotos(prev => prev.filter(p => p.id !== photoId));
+
     }
-  };
+  }
+  catch(err){
+    console.error("Error saving photo:", err);
+  }
+}
 
   useEffect(() => {
     if (isLoadingRef.current || !hasMoreRef.current) return;
-
     const fetchData = async () => {
       isLoadingRef.current = true;
       setIsLoading(true);
       try {
-        const data = await fetchPhotos('fashion', page);
+        const data = await fetchPhotos("fashion", page);
         setPhotos((prev) => [...prev, ...data.results]);
         hasMoreRef.current = page < 1000;
-        setHasMore(page < 1000);
       } catch (err) {
         console.error(err);
       } finally {
@@ -51,28 +59,41 @@ export default function DiscoverScreen({ likedPhotos, setlikedPhotos }) {
         setIsLoading(false);
       }
     };
-
     fetchData();
   }, [page]);
 
   useEffect(() => {
+
     const handleScroll = () => {
-      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 && !isLoadingRef.current && hasMoreRef.current) {
+      if (
+        window.innerHeight + window.scrollY >= document.body.offsetHeight-10 &&
+        !isLoadingRef.current &&
+        hasMoreRef.current
+      ) 
+      
+      {
         setPage((prev) => prev + 1);
       }
     };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    console.log("saved photos in discover", likedPhotos);
-  }, [likedPhotos])
+  // filter using activeFilter
+  const filteredPhotos = photos.filter((photo) => {
+    const desc = photo.alt_description?.toLowerCase() || "";
+    if (activeFilter === "All") return true;
+     if (activeFilter === "Men") return (desc.includes("man") || desc.includes("men")) && 
+                                     !desc.includes("woman") && 
+                                     !desc.includes("women");
+    if (activeFilter === "Women") return desc.includes("woman") || desc.includes("women");
+  });
 
   return (
-    <div className="min-h-screen bg-[#141414] font-sans ">
+    <div className="min-h-screen bg-[#141414] font-sans">
       <Header />
+
+      {/* Search + Filter */}
       <div className="flex gap-3 items-center mb-6">
         <input
           type="text"
@@ -93,25 +114,30 @@ export default function DiscoverScreen({ likedPhotos, setlikedPhotos }) {
         </div>
       </div>
 
+      {/* Photo Grid */}       
       <div className="grid grid-cols-3 gap-4">
         {photos.map((photo) => (
           <Cards
-            key={photo.id}
-            id={photo.id}
+            key={photo.id}        
+            id={photo.id}                       
             url={photo.urls.small}
             title={photo.alt_description}
             photo={photo}
-            saved={likedPhotos.some(p => p.id === photo.id)}
-            onClick={() => setSelectedPhoto(photo)}   
-            onPhotoSaved={() =>savePhotoToFirebase(uid, photo) }
+            saved={likedPhotos?.some(p => p.id === photo.id)}
+            onClick={() => setSelectedPhoto(photo)}
+            onPhotoSaved={handlePhotoSaved}
           />
         ))}
       </div>
 
+      {isLoading && (
+        <p className="text-center text-gray-500 text-sm py-6">Loading...</p>
+      )}
+
       <PhotoModal
         photo={selectedPhoto}
         onClose={() => setSelectedPhoto(null)}
-      />                                              
+      />
     </div>
   );
 }

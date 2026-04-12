@@ -9,24 +9,7 @@ import Wardrobe from './pages/Wardrobe'
 export default function App() {
   const [likedPhotos, setlikedPhotos] = useState([])
 
-  // Load photos from localStorage on mount
-  useEffect(() => {
-    const savedData = localStorage.getItem('likedPhotos')
-    if (savedData) {
-      try {
-        setlikedPhotos(JSON.parse(savedData))
-        console.log('Photos loaded from localStorage')
-      } catch (error) {
-        console.error('Error parsing saved photos:', error)
-      }
-    }
-  }, [])
-
-  // Save photos to localStorage whenever they change
-  useEffect(() => {
-    localStorage.setItem('likedPhotos', JSON.stringify(likedPhotos))
-    console.log('Photos saved to localStorage')
-  }, [likedPhotos])
+ 
 
   return (
     <Provider store={store}>

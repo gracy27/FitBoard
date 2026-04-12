@@ -11,10 +11,6 @@ import {
   doc 
 } from "firebase/firestore";
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyD7ml_jPLeH5PBARWRUHccYPf_KL6mLkFY",
   authDomain: "fitboard-12701.firebaseapp.com",
@@ -25,9 +21,10 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
+
 export const db = getFirestore(app);
 
-// 1. SAVE a photo to Firebase
+// SAVE a photo to Firebase
 export const savePhotoToFirebase = async (userId, photo) => {
   
   try {
@@ -44,7 +41,7 @@ export const savePhotoToFirebase = async (userId, photo) => {
   }
 };
 
-// 2. DELETE a photo from Firebase
+// DELETE a photo from Firebase
 export const deletePhotoFromFirebase = async (userId, photoDocId) => {
   try {
     await deleteDoc(doc(db, "users", userId, "likedPhotos", photoDocId));
@@ -54,7 +51,7 @@ export const deletePhotoFromFirebase = async (userId, photoDocId) => {
   }
 };
 
-// 3. FETCH all saved photos from Firebase
+// FETCH all saved photos from Firebase
 export const fetchlikedPhotosFromFirebase = async (userId) => {
 
   try {
