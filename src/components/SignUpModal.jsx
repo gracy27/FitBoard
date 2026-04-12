@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { signup } from "../utils/SignUp";
+import { toast } from "react-toastify";
 
 export default function SignUpModal({ isOpen, onClose }) {
   const [name, setName] = useState("");
@@ -77,10 +78,11 @@ export default function SignUpModal({ isOpen, onClose }) {
 
             try {
               await signup(email, password, name);
+              toast.success("Account created successfully! Please log in.");
               onClose();
             } catch (error) {
               console.error(error);
-              alert("Failed to sign up. Please try again.");
+              toast.error("Failed to sign up. Please try again.");
             }
           }}
           className="w-full bg-pink-500 text-white text-sm font-medium py-2.5 rounded-xl hover:bg-pink-600 transition-colors mb-3"

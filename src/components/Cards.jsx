@@ -38,7 +38,7 @@ export function Cards({ id, url, title, saved: initialSaved = false, onClick, on
             flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium w-fit transition-all duration-200
             ${
               saved
-                ? "bg-[#2a2a2a] text-white border border-gray-600"
+                ? "text-white border border-rose-600 bg-gradient-to-r from-rose-400 to-pink-500 "
                 : "bg-[#2a2a2a] text-gray-300 border border-gray-600 hover:border-rose-400 hover:text-rose-400"
             }
           `}

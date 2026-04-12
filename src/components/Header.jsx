@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { logout } from '../utils/Logout';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 export function Header() {
     const userEmail=localStorage.getItem('userEmail');
     const userName=localStorage.getItem('userName');
     const navigate = useNavigate();
-
+    const location =useLocation();
     
                         
     const initialName = userName  &&  userName!=='null' ? userName.charAt(0).toUpperCase() : userEmail.charAt(0).toUpperCase() ;
@@ -14,16 +15,16 @@ export function Header() {
         <header className="bg-[#0a0a0a] border-b border-gray-800 py-4 px-6 mb-6">
             <div className="flex justify-between items-center">
                 <div className="flex items-center">
-                    <span className="text-2xl font-bold bg-gradient-to-r from-rose-400 to-pink-500 bg-clip-text text-transparent">
+                    <span className="text-2xl font-bold bg-gradient-to-r from-rose-400 to-pink-500 bg-clip-text text-transparent">   
                         FitBoard
                     </span>
                 </div>
 
                 <nav className="flex gap-8 items-center">
-                    <span onClick={() => navigate('/discover')} className="text-gray-300 text-sm hover:text-rose-400 transition-colors cursor-pointer font-medium">
+                    <span onClick={() => navigate('/discover')} className={`text-sm hover:text-rose-400 transition-colors cursor-pointer font-medium ${location.pathname === '/discover' ? 'text-rose-400' : 'text-gray-300'}`}>
                         Discover
                     </span>
-                    <span onClick={() => navigate('/wardrobe')} className="text-gray-300 text-sm hover:text-rose-400 transition-colors cursor-pointer font-medium">
+                    <span onClick={() => navigate('/wardrobe')} className={`text-sm hover:text-rose-400 transition-colors cursor-pointer font-medium ${location.pathname === '/wardrobe' ? 'text-rose-400' : 'text-gray-300'}`}>
                         Wardrobe
                     </span>
                     <span  className="text-gray-300 text-sm hover:text-rose-400 transition-colors cursor-pointer font-medium">

@@ -3,6 +3,8 @@ import { Cards } from "../components/Cards"
 import { useState, useEffect } from "react";
 import { fetchlikedPhotosFromFirebase } from "../api/firebase";
 import { deletePhotoFromFirebase } from "../api/firebase";
+import { toast } from "react-toastify";
+
 export default function Wardrobe({ likedPhotos, setlikedPhotos }) {
   const uid = localStorage.getItem("uid");
 
@@ -11,6 +13,8 @@ export default function Wardrobe({ likedPhotos, setlikedPhotos }) {
     try{
     const deletedDocId = likedPhotos.find(p=>p.id===photoId)
     await deletePhotoFromFirebase(uid, deletedDocId.docId);
+    toast.success("Look removed from wardrobe!");
+
     setlikedPhotos((prev) => prev.filter((p) => p.id !== photoId))
     console.log("Photo deleted:", photoId)
     }
@@ -27,13 +31,13 @@ export default function Wardrobe({ likedPhotos, setlikedPhotos }) {
     })
   }, [])
 
-  return (
-    <div className="min-h-screen bg-[#141414] font-sans">
+  return (                                                   
+    <div className="min-h-screen bg-[#141414] font-sans">   
       <Header />
 
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-white text-lg font-semibold">My Saved Looks</h2>
-        <span className="text-gray-400 text-sm">{likedPhotos.length} items</span>
+      <div className="flex items-center  mb-6">
+        <span className="text-white text-lg font-semibold">{`Saved Looks (${likedPhotos.length})`}</span>
+        
       </div>
 
       {likedPhotos.length === 0 ? (

@@ -6,6 +6,7 @@ import { fetchPhotos } from "../api/unsplash";
 import { PhotoModal } from "../components/PhotoModal";
 import { savePhotoToFirebase } from "../api/firebase";
 import { deletePhotoFromFirebase } from "../api/firebase";
+import { toast } from "react-toastify";
 const FILTERS = ["All", "Men", "Women"];
 
 export default function DiscoverScreen({ likedPhotos, setlikedPhotos }) {
@@ -27,19 +28,22 @@ export default function DiscoverScreen({ likedPhotos, setlikedPhotos }) {
     if (isSaved) {
       
       const docId = await savePhotoToFirebase(uid, photo);
+      toast.success("Look saved to wardrobe!");
       setlikedPhotos((prev)=>[...prev, { ...photo, docId }]);
-
+      
     
     } else {
       const likedPhoto = likedPhotos.find(p => p.id === photoId);
       console.log(likedPhotos)
       await deletePhotoFromFirebase(uid, likedPhoto.docId);
       setlikedPhotos(prev => prev.filter(p => p.id !== photoId));
+      toast.success("Look removed from wardrobe!");
 
     }
   }
   catch(err){
     console.error("Error saving photo:", err);
+    toast.error(isSaved ? "Failed to save look. Please try again." : "Failed to remove look. Please try again.");
   }
 }
 

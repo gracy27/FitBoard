@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { login } from "../utils/Login";
 import  SignUpModal from "../components/SignUpModal";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -14,6 +15,7 @@ export default function LoginPage() {
 
   async function handleLogin() {
     await login(email, password);
+    toast.success("Logged In successfully!");
     const idToken = localStorage.getItem('idtoken');
     if (idToken) {
       navigate('/discover');
@@ -55,7 +57,7 @@ export default function LoginPage() {
             className="block w-full bg-[#1e1e1e] text-gray-300 placeholder-gray-500 text-sm px-4 py-2.5 rounded-xl border border-gray-700 focus:outline-none focus:border-rose-400 transition-colors mb-6"
           />
 
-          {/* Login Button */}
+        
           <button
             onClick={handleLogin}
             className="w-full bg-pink-500 text-white text-sm font-medium py-2.5 rounded-xl hover:bg-pink-600 transition-colors mb-4"
@@ -65,12 +67,11 @@ export default function LoginPage() {
 
           <hr />
 
-          {/* Google Button */}
+          
           <button className="w-full bg-pink-500 text-white text-sm font-medium py-2.5 rounded-xl hover:bg-pink-600 transition-colors mt-2">
             Continue with Google
           </button>
 
-          {/* Signup */}
           <p className="text-white mt-3">
             No account?{" "}
             <span
