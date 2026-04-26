@@ -27,7 +27,7 @@ export function Header() {
                     <span onClick={() => navigate('/wardrobe')} className={`text-sm hover:text-rose-400 transition-colors cursor-pointer font-medium ${location.pathname === '/wardrobe' ? 'text-rose-400' : 'text-gray-300'}`}>
                         Wardrobe
                     </span>
-                    <span  className="text-gray-300 text-sm hover:text-rose-400 transition-colors cursor-pointer font-medium">
+                    <span onClick={()=>navigate('/moodboard')} className="text-gray-300 text-sm hover:text-rose-400 transition-colors cursor-pointer font-medium">
                         Moodboards
                     </span>
                 </nav>

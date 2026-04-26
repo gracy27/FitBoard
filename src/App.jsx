@@ -5,10 +5,11 @@ import store from './redux/store'
 import LoginPage from './pages/LoginPage'
 import Discovery from './pages/Discovery'
 import Wardrobe from './pages/Wardrobe'
+import Moodboard from './pages/Moodboard'
 import { ToastContainer, toast } from 'react-toastify';
 export default function App() {
   const [likedPhotos, setlikedPhotos] = useState([])
-
+  const [moodboards, setMoodboards] = useState([]);
 
 
   return (
@@ -29,7 +30,8 @@ export default function App() {
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/discover" element={<Discovery likedPhotos={likedPhotos} setlikedPhotos={setlikedPhotos} />} />
-          <Route path="/wardrobe" element={<Wardrobe likedPhotos={likedPhotos} setlikedPhotos={setlikedPhotos} />} />
+          <Route path="/wardrobe" element={<Wardrobe likedPhotos={likedPhotos} setlikedPhotos={setlikedPhotos} moodboards={moodboards} setMoodboards={setMoodboards} />} />
+          <Route path="/moodboard" element={<Moodboard moodboards={moodboards} setMoodboards={setMoodboards} />} />
         </Routes>
       </BrowserRouter>
     </Provider>

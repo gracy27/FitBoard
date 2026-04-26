@@ -15,11 +15,15 @@ export default function LoginPage() {
 
   async function handleLogin() {
     await login(email, password);
-    toast.success("Logged In successfully!");
     const idToken = localStorage.getItem('idtoken');
     if (idToken) {
+      toast.success("Logged In successfully!");
       navigate('/discover');
     }
+    else{
+      toast.error("Login failed. Please check your credentials and try again.");
+    }
+
   }
   return (
     <div className="min-h-screen bg-[#141414] font-sans p-6 flex flex-col items-center justify-center gap-8">

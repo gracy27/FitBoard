@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export function Cards({ id, url, title, saved: initialSaved = false, onClick, onPhotoSaved }) {
+export function Cards({ id, url, title, saved: initialSaved = false, onClick, onPhotoSaved, onthreeDots }) {
                                                                                                   
   const [saved, setSaved] = useState(initialSaved);
   const handleSaved = (e) => {
@@ -31,7 +31,7 @@ export function Cards({ id, url, title, saved: initialSaved = false, onClick, on
           <p className="text-white text-sm font-semibold leading-tight">{id}</p>
           <p className="text-gray-400 text-xs mt-0.5">{title || "No description"}</p>
         </div>
-
+      <div className="flex justify-between">
         <button
           onClick={handleSaved}
           className={`
@@ -45,6 +45,18 @@ export function Cards({ id, url, title, saved: initialSaved = false, onClick, on
         >
           <span>{saved ? "Saved" : "Save"}</span>
         </button>
+         {location.pathname === '/wardrobe' && (
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              onthreeDots();
+            }}
+            className="text-white font-bold text-xl px-3 py-1 rounded hover:bg-[#2a2a2a] transition-colors cursor-pointer"
+          >
+            ⋮
+          </button>
+        )}
+        </div>
       </div>
     </div>
   );
