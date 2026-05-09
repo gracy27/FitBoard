@@ -58,9 +58,8 @@ export default function Wardrobe({ likedPhotos, setlikedPhotos, moodboards, setM
     <div className="min-h-screen bg-[#141414] font-sans">   
       <Header />
 
-      <div className="flex items-center  mb-6">
+      <div className="flex items-center justify-between mb-6">
         <span className="text-white text-lg font-semibold">{`Saved Looks (${likedPhotos.length})`}</span>
-        
       </div>
 
       
@@ -117,4 +116,3 @@ export default function Wardrobe({ likedPhotos, setlikedPhotos, moodboards, setM
     </div>
   )
 }
-

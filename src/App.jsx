@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Provider } from 'react-redux'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import store from './redux/store'
+
 import LoginPage from './pages/LoginPage'
 import Discovery from './pages/Discovery'
 import Wardrobe from './pages/Wardrobe'
@@ -13,7 +13,7 @@ export default function App() {
 
 
   return (
-    <Provider store={store}>
+    
 
       <BrowserRouter>
         <ToastContainer position="top-right"
@@ -34,6 +34,6 @@ export default function App() {
           <Route path="/moodboard" element={<Moodboard moodboards={moodboards} setMoodboards={setMoodboards} />} />
         </Routes>
       </BrowserRouter>
-    </Provider>
+    
   )
 }
