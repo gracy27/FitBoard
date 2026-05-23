@@ -1,29 +1,21 @@
-import { useEffect, useState } from "react";
-//import { signup } from "../utils/SignUp";
-import { login } from "../utils/Login";
-import  SignUpModal from "../components/SignUpModal";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading, setError } from "../store/slices/userSlice";
+import SignUpModal from "../components/SignUpModal";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSignupOpen, setIsSignupOpen] = useState(false);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const loading = useSelector(state => state.user.loading);
+  const error = useSelector(state => state.user.error);
 
- 
-
-  async function handleLogin() {
-    await login(email, password);
-    const idToken = localStorage.getItem('idtoken');
-    if (idToken) {
-      toast.success("Logged In successfully!");
-      navigate('/discover');
-    }
-    else{
-      toast.error("Login failed. Please check your credentials and try again.");
-    }
-
+  function handleLogin() {
+    dispatch({ type: 'user/LOGIN_REQUEST', payload: { email, password } });
+    navigate('/discover');
   }
   return (
     <div className="min-h-screen bg-[#141414] font-sans p-6 flex flex-col items-center justify-center gap-8">

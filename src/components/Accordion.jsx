@@ -1,8 +1,10 @@
 
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import State from "../store/store";
 export default function Accordion({ moodboards, onCreateClick }) {
     const [openBoardId, setOpenBoardId] = useState(null);
-
+    const looks = useSelector(state => state.moodboards.looks);
     const toggleAccordion = (boardId) => {
         setOpenBoardId(openBoardId === boardId ? null : boardId);
     };
@@ -27,7 +29,7 @@ export default function Accordion({ moodboards, onCreateClick }) {
                                 </div>
                                 <div>
                                     <h3 className="text-white font-semibold">{board.title}</h3>
-                                    <p className="text-gray-400 text-sm">{board.looks} looks</p>
+                                    <p className="text-gray-400 text-sm">{looks} looks</p>
                                 </div>
                             </div>
                             <button 

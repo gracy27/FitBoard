@@ -1,12 +1,12 @@
 import { Header } from "../components/Header"
 import { Cards } from "../components/Cards"
 import { useState, useEffect } from "react";
-import { fetchlikedPhotosFromFirebase } from "../api/firebase";
-import { deletePhotoFromFirebase } from "../api/firebase";
-import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
 
-export default function Wardrobe({ likedPhotos, setlikedPhotos, moodboards, setMoodboards }) {
-  const uid = localStorage.getItem("uid");
+export default function Wardrobe() {
+  const dispatch = useDispatch();
+  const likedPhotos = useSelector(state => state.photos.likedPhotos);
+  const moodboards = useSelector(state => state.moodboards.moodboards);
   const [openthreeDotsId, setOpenthrthreeDotsId] = useState(null);
 
   const handleAddToMoodboard = (photoId) => 
@@ -15,44 +15,19 @@ export default function Wardrobe({ likedPhotos, setlikedPhotos, moodboards, setM
     }
 
   const handleAddPhotoToMoodboard = (boardId, photo) => {
-    setMoodboards((prevMoodboards) =>
-      prevMoodboards.map((board) =>
-        board.id === boardId
-          ? {
-              ...board,
-              photos: board.photos &&  [...board.photos, photo] ,
-              looks: (board.looks || 0) + 1,
-            }
-          : board
-      )
-    );
+    dispatch({ type: 'moodboards/ADD_PHOTO_TO_MOODBOARD', payload: { boardId, photo } });
     setOpenthrthreeDotsId(null);
-    toast.success("Photo added to moodboard!");
   }
 
-  const handlePhotoDelete = async (photoId) => {
+  const handlePhotoDelete = (photoId) => {
     if(!photoId) return;
-    try{
-    const deletedDocId = likedPhotos.find(p=>p.id===photoId)
-    await deletePhotoFromFirebase(uid, deletedDocId.docId);
-    toast.success("Look removed from wardrobe!");
-
-    setlikedPhotos((prev) => prev.filter((p) => p.id !== photoId))
-    console.log("Photo deleted:", photoId)
-    }
-    catch(err){
-      console.error("Error deleting photo:", err);
-      toast.error("Failed to remove look. Please try again.");
-    }
+    const likedPhoto = likedPhotos.find(p=>p.id===photoId);
+    dispatch({ type: 'photos/DELETE_PHOTO_REQUEST', payload: { photoId, docId: likedPhoto.docId } });
   }
 
   useEffect(() => {
-    console.log("Fetching photos for user:", uid);
-    fetchlikedPhotosFromFirebase(uid).then((photos) => {
-      setlikedPhotos(photos);
-      console.log("Photos fetched from Firebase:", photos);
-    })
-  }, [])
+    dispatch({ type: 'photos/FETCH_LIKED_PHOTOS_REQUEST' });
+  }, [dispatch])
 
   return (                                                   
     <div className="min-h-screen bg-[#141414] font-sans">   

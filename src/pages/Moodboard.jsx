@@ -1,26 +1,17 @@
-import { useState,useEffect } from "react";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Header } from "../components/Header";
 import Accordion from "../components/Accordion";
 import CreateMoodboardModal from "../components/CreateMoodboardModal";
 
-export default function Moodboard({ moodboards, setMoodboards })
+export default function Moodboard()
 {
-    
+    const dispatch = useDispatch();
+    const moodboards = useSelector(state => state.moodboards.moodboards);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleCreateMoodboard = (newMoodboard) => {
-        const newId = Math.max(...moodboards.map(b => b.id), 0) + 1;  
-        console.log(newId)
-        setMoodboards([
-            ...moodboards,
-            {
-                id: newId,
-                title: newMoodboard.title,
-                looks: 0,
-                photos: [],
-                color: newMoodboard.color
-            }
-        ]);
+        dispatch({ type: 'moodboards/CREATE_MOODBOARD', payload: newMoodboard });
         setIsModalOpen(false);
     };
 

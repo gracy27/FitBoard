@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react';
-import { logout } from '../utils/Logout';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 export function Header() {
-    const userEmail=localStorage.getItem('userEmail');
-    const userName=localStorage.getItem('userName');
+    const dispatch = useDispatch();
+    const user = useSelector(state => state.user.user);
     const navigate = useNavigate();
-    const location =useLocation();
+    const location = useLocation();
     
-                        
-    const initialName = userName  &&  userName!=='null' ? userName.charAt(0).toUpperCase() : userEmail.charAt(0).toUpperCase() ;
+    const userEmail = user?.email || localStorage.getItem('userEmail');
+    const userName = user?.name || localStorage.getItem('userName');
+    const initialName = userName && userName !== 'null' ? userName.charAt(0).toUpperCase() : userEmail?.charAt(0).toUpperCase() || 'U';
     // something ? value : value1
     return (
         <header className="bg-[#0a0a0a] border-b border-gray-800 py-4 px-6 mb-6">
@@ -37,7 +37,7 @@ export function Header() {
                         {initialName}
                     </div>
                     <button
-                        onClick={() => logout(navigate)}
+                        onClick={() => dispatch({ type: 'user/LOGOUT_REQUEST' })}
                         className="px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 bg-transparent text-gray-300 border border-gray-600 hover:border-rose-400 hover:text-rose-400"
                     >
                         Logout

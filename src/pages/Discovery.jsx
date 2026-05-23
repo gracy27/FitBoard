@@ -1,52 +1,33 @@
 import { useState, useEffect, useRef } from "react";
-import { Chips } from "../components/Chips";
+import { useDispatch, useSelector } from "react-redux";
 import { Cards } from "../components/Cards";
 import { Header } from "../components/Header";
-import { fetchPhotos } from "../api/unsplash";
 import { PhotoModal } from "../components/PhotoModal";
-import { savePhotoToFirebase } from "../api/firebase";
-import { deletePhotoFromFirebase } from "../api/firebase";
-import { toast } from "react-toastify";
 import { debounce } from "../utils/Debounce";
 const FILTERS = ["All", "Men", "Women"];
 
-export default function DiscoverScreen({ likedPhotos, setlikedPhotos }) {
+export default function DiscoverScreen() {
+  const dispatch = useDispatch();
+  const likedPhotos = useSelector(state => state.photos.likedPhotos);
+  const photos = useSelector(state => state.photos.photos);
+  const isLoading = useSelector(state => state.photos.loading);
   const [activeFilter, setActiveFilter] = useState("All");
   const [query, setQuery] = useState("");
-  const [photos, setPhotos] = useState([]);
   const [page, setPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const isLoadingRef = useRef(false);
   const hasMoreRef = useRef(true);
   const [filteredPhotos, setFilteredPhotos] = useState([]);
 
-
-  const uid = localStorage.getItem("uid");
-
-  const handlePhotoSaved = async (photoId, isSaved) => {
+  const handlePhotoSaved = (photoId, isSaved) => {
     const photo = photos.find(p => p.id === photoId);
     if (!photo) return;
-    try {
-      if (isSaved) {
-
-        const docId = await savePhotoToFirebase(uid, photo);
-        toast.success("Look saved to wardrobe!");
-        setlikedPhotos((prev) => [...prev, { ...photo, docId }]);
-
-
-      } else {
-        const likedPhoto = likedPhotos.find(p => p.id === photoId);
-        console.log(likedPhotos)
-        await deletePhotoFromFirebase(uid, likedPhoto.docId);
-        setlikedPhotos(prev => prev.filter(p => p.id !== photoId));
-        toast.success("Look removed from wardrobe!");
-
-      }
-    }
-    catch (err) {
-      console.error("Error saving photo:", err);
-      toast.error(isSaved ? "Failed to save look. Please try again." : "Failed to remove look. Please try again.");
+    
+    if (isSaved) {
+      dispatch({ type: 'photos/SAVE_PHOTO_REQUEST', payload: { photo } });
+    } else {
+      const likedPhoto = likedPhotos.find(p => p.id === photoId);
+      dispatch({ type: 'photos/DELETE_PHOTO_REQUEST', payload: { photoId, docId: likedPhoto.docId } });
     }
   }
 
@@ -62,22 +43,11 @@ export default function DiscoverScreen({ likedPhotos, setlikedPhotos }) {
 
   useEffect(() => {
     if (isLoadingRef.current || !hasMoreRef.current) return;
-    const fetchData = async () => {
-      isLoadingRef.current = true;
-      setIsLoading(true);
-      try {
-        const data = await fetchPhotos("fashion", page);
-        setPhotos((prev) => [...prev, ...data.results]);
-        hasMoreRef.current = page < 1000;
-      } catch (err) {
-        console.error(err);
-      } finally {
-        isLoadingRef.current = false;
-        setIsLoading(false);
-      }
-    };
-    fetchData();
-  }, [page]);
+    isLoadingRef.current = true;
+    dispatch({ type: 'photos/FETCH_PHOTOS_REQUEST', payload: { query: "fashion", page } });
+    hasMoreRef.current = page < 1000;
+    isLoadingRef.current = false;
+  }, [page, dispatch]);
 
   useEffect(() => {
 
